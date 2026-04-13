@@ -384,26 +384,38 @@
   }
 
   // ─── Rotation Toggle ──────────────────────────────────────
+  let currentRotationAngle = 0;
+  
   async function toggleLandscape() {
-    // First try native screen orientation API (works on Android Chrome)
-    if (document.documentElement.requestFullscreen && screen.orientation) {
-      try {
-        if (!document.fullscreenElement) {
-          await document.documentElement.requestFullscreen();
-          await screen.orientation.lock("landscape");
-        } else {
-          document.exitFullscreen();
-          screen.orientation.unlock();
-        }
-        return;
-      } catch (e) {
-        console.log("Native orientation lock not supported, falling back to CSS");
-      }
+    // We skip native hardware lock (screen.orientation.lock) 
+    // because it forces the OS's primary landscape direction.
+    // Instead we manually CSS-cycle through all 4 orientations
+    // so the user can match their exact physical phone hold.
+    
+    currentRotationAngle = (currentRotationAngle + 90) % 360;
+    
+    appEl.style.transformOrigin = 'center';
+    appEl.style.transition = 'transform 0.3s ease';
+    
+    if (currentRotationAngle % 180 !== 0) {
+      // Landscape modes (90deg or 270deg)
+      appEl.style.transform = `rotate(${currentRotationAngle}deg)`;
+      appEl.style.width = '100vh';
+      appEl.style.height = '100vw';
+      appEl.style.position = 'absolute';
+      appEl.style.top = 'calc(50% - 50vw)';
+      appEl.style.left = 'calc(50% - 50vh)';
+    } else {
+      // Portrait modes (0deg or 180deg)
+      appEl.style.transform = `rotate(${currentRotationAngle}deg)`;
+      appEl.style.width = '100%';
+      appEl.style.height = '100%';
+      appEl.style.position = 'fixed';
+      appEl.style.top = '0';
+      appEl.style.left = '0';
     }
     
-    // Fallback: Rotate container via CSS
-    appEl.classList.toggle('rotated');
-    setTimeout(resize, 350); // Give CSS transform time to apply, then resize canvas
+    setTimeout(resize, 350); // Resize canvas to new dimensions after transform
   }
 
   const rotateBtn = document.getElementById('rotate-cam-btn');
