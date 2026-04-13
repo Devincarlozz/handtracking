@@ -416,6 +416,50 @@
     splashRotateBtn.addEventListener('click', toggleLandscape);
   }
 
+  // ─── Camera Logic ─────────────────────────────────────────
+  let currentStream = null;
+  let currentFacingMode = 'user';
+
+  async function startCamera(facingMode) {
+    if (currentStream) {
+      currentStream.getTracks().forEach(track => track.stop());
+    }
+    try {
+      currentStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width:     { ideal: 1280 },
+          height:    { ideal: 720 },
+          frameRate: { ideal: 30, max: 60 },
+          facingMode: facingMode, 
+        },
+      });
+      videoEl.srcObject = currentStream;
+      await new Promise(resolve => videoEl.onloadedmetadata = resolve);
+      videoEl.play();
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  }
+
+  const switchCamBtn = document.getElementById('switch-cam-btn');
+  if (switchCamBtn) {
+    switchCamBtn.addEventListener('click', async () => {
+      // Toggle string and trigger reboot
+      currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+      
+      // Temporarily show loading state and disable button to prevent spam click
+      switchCamBtn.style.opacity = '0.5';
+      switchCamBtn.style.pointerEvents = 'none';
+      
+      await startCamera(currentFacingMode);
+      
+      switchCamBtn.style.opacity = '1';
+      switchCamBtn.style.pointerEvents = 'all';
+    });
+  }
+
   // ─── Start ────────────────────────────────────────────────
   startBtn.addEventListener('click', async () => {
     splash.classList.add('fade-out');
@@ -426,30 +470,18 @@
     initDetectors();
 
     loadText.textContent = 'Requesting camera…';
-    let stream;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          width:     { ideal: 1280 },
-          height:    { ideal: 720 },
-          frameRate: { ideal: 30, max: 60 },
-          facingMode: 'environment', // Use back camera to completely avoid all physical and native browser mirroring
-        },
-      });
-    } catch (err) {
+    const success = await startCamera(currentFacingMode);
+    
+    if (!success) {
       loadText.textContent = '⚠️ Camera access denied. Please allow and reload.';
-      console.error(err);
       return;
     }
 
-    videoEl.srcObject = stream;
-    videoEl.onloadedmetadata = () => {
-      videoEl.play();
-      loadingEl.classList.add('done');
-      setTimeout(() => loadingEl.remove(), 500);
-      // Start dual loops for decoupled tracking vs rendering
-      requestAnimationFrame(renderLoop);
-      videoEl.requestVideoFrameCallback(processVideo);
-    };
+    loadingEl.classList.add('done');
+    setTimeout(() => loadingEl.remove(), 500);
+    
+    // Start dual loops for decoupled tracking vs rendering
+    requestAnimationFrame(renderLoop);
+    videoEl.requestVideoFrameCallback(processVideo);
   });
 })();
