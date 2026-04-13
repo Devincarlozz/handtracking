@@ -61,7 +61,14 @@
     <div class="ui-overlay">
       <div class="ui-header">
         <div class="logo-small">Vision Tracker</div>
-        <div id="fps-counter" class="fps-counter">-- fps</div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <div id="fps-counter" class="fps-counter">-- fps</div>
+          <button id="rotate-cam-btn" class="icon-btn" title="Rotate View">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="ui-status">
         <div id="hand-status" class="hand-status">

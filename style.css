@@ -336,6 +336,19 @@ html, body {
 ::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 4px; }
 
 /* ——————————————————————————————————————
+   VIEW ROTATION
+—————————————————————————————————————— */
+.app.rotated {
+  transform: rotate(90deg);
+  transform-origin: center;
+  width: 100vh;
+  height: 100vw;
+  position: absolute;
+  top: calc(50% - 50vw);
+  left: calc(50% - 50vh);
+}
+
+/* ——————————————————————————————————————
    BREAKPOINTS
 —————————————————————————————————————— */
 

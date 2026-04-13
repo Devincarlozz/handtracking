@@ -383,6 +383,32 @@
     });
   }
 
+  // ─── Rotation Toggle ──────────────────────────────────────
+  const rotateBtn = document.getElementById('rotate-cam-btn');
+  if (rotateBtn) {
+    rotateBtn.addEventListener('click', async () => {
+      // First try native screen orientation API (works on Android Chrome)
+      if (document.documentElement.requestFullscreen && screen.orientation) {
+        try {
+          if (!document.fullscreenElement) {
+            await document.documentElement.requestFullscreen();
+            await screen.orientation.lock("landscape");
+          } else {
+            document.exitFullscreen();
+            screen.orientation.unlock();
+          }
+          return;
+        } catch (e) {
+          console.log("Native orientation lock not supported, falling back to CSS");
+        }
+      }
+      
+      // Fallback: Rotate container via CSS
+      appEl.classList.toggle('rotated');
+      setTimeout(resize, 350); // Give CSS transform time to apply, then resize canvas
+    });
+  }
+
   // ─── Start ────────────────────────────────────────────────
   startBtn.addEventListener('click', async () => {
     splash.classList.add('fade-out');
