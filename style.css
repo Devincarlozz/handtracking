@@ -1,0 +1,387 @@
+/* ——————————————————————————————————————
+   VISION TRACKER — Responsive Style System
+   Dark glassmorphic aesthetic · Fluid grid · All screen sizes
+—————————————————————————————————————— */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --purple:    #a855f7;
+  --cyan:      #06b6d4;
+  --pink:      #ec4899;
+  --green:     #10b981;
+  --bg:        #06040f;
+  --panel:     rgba(255,255,255,0.04);
+  --border:    rgba(255,255,255,0.08);
+  --text:      #e2d9f3;
+  --muted:     #7c6d9a;
+  --glow-p:    rgba(168,85,247,0.4);
+  --glow-c:    rgba(6,182,212,0.4);
+  --font:      'Outfit', system-ui, sans-serif;
+  --radius:    14px;
+  --radius-lg: 22px;
+
+  /* Fluid spacing scale */
+  --sp-xs:  clamp(6px,  1vw, 10px);
+  --sp-sm:  clamp(10px, 1.5vw, 16px);
+  --sp-md:  clamp(16px, 2.5vw, 28px);
+  --sp-lg:  clamp(24px, 4vw,  48px);
+
+  /* Fluid type scale */
+  --text-xs:  clamp(0.65rem, 1.2vw, 0.78rem);
+  --text-sm:  clamp(0.78rem, 1.5vw, 0.92rem);
+  --text-md:  clamp(0.92rem, 2vw,   1rem);
+  --text-lg:  clamp(1.4rem,  4vw,   2.4rem);
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ——— UTILITY ——— */
+.hidden { display: none !important; }
+
+/* ——————————————————————————————————————
+   SPLASH SCREEN
+—————————————————————————————————————— */
+.splash {
+  position: fixed; inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 100;
+  background: var(--bg);
+  padding: var(--sp-sm);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.splash.fade-out {
+  opacity: 0;
+  transform: scale(0.97);
+  pointer-events: none;
+}
+
+.splash-bg {
+  position: absolute; inset: 0; z-index: 0;
+  overflow: hidden;
+}
+
+#splash-canvas { width: 100%; height: 100%; }
+
+.splash-content {
+  position: relative; z-index: 1;
+  width: min(100%, 520px);
+  padding: var(--sp-lg) var(--sp-md);
+  background: rgba(10,6,20,0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 80px rgba(168,85,247,0.15), 0 0 120px rgba(6,182,212,0.08);
+  text-align: center;
+  animation: fadeUp 0.8s ease both;
+
+  /* Inner responsive grid */
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto auto;
+  gap: var(--sp-sm);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.splash-icon {
+  width: clamp(48px, 8vw, 72px);
+  height: clamp(48px, 8vw, 72px);
+  margin: 0 auto;
+  animation: pulse-icon 3s ease-in-out infinite;
+}
+
+@keyframes pulse-icon {
+  0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 12px var(--purple)); }
+  50%       { transform: scale(1.08); filter: drop-shadow(0 0 24px var(--cyan)); }
+}
+
+.splash-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--purple), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+
+.splash-subtitle {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Responsive 3-column grid on wide, 1-column on narrow */
+.splash-tips {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--sp-xs);
+  text-align: left;
+}
+
+.splash-tips li {
+  font-size: var(--text-xs);
+  color: #b8a8d6;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(168,85,247,0.06);
+  padding: var(--sp-xs) var(--sp-sm);
+  border-radius: 10px;
+  border: 1px solid rgba(168,85,247,0.12);
+  line-height: 1.5;
+}
+
+.tip-icon {
+  color: var(--cyan);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.start-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: clamp(12px, 2vw, 16px) clamp(20px, 4vw, 36px);
+  background: linear-gradient(135deg, var(--purple), var(--cyan));
+  border: none;
+  border-radius: 50px;
+  color: #fff;
+  font-family: var(--font);
+  font-size: var(--text-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 30px rgba(168,85,247,0.35);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.start-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 40px rgba(168,85,247,0.5);
+}
+.start-btn:active { transform: scale(0.98); }
+
+.btn-arrow {
+  width: 18px; height: 18px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.start-btn:hover .btn-arrow { transform: translateX(4px); }
+
+.splash-note {
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+/* ——————————————————————————————————————
+   MAIN APP
+—————————————————————————————————————— */
+.app {
+  position: fixed; inset: 0;
+  display: grid;
+}
+
+/* Video is hidden — only used as pixel source fed to MediaPipe */
+#webcam {
+  position: absolute;
+  width: 1px; height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Canvas is the single display surface — draws video + landmarks */
+#main-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+  cursor: none;
+  z-index: 2;
+  background: #06040f;
+}
+
+/* ——————————————————————————————————————
+   UI OVERLAY — Responsive Grid Layout
+—————————————————————————————————————— */
+.ui-overlay {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.ui-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-xs);
+  padding: clamp(10px, 2vw, 18px) clamp(12px, 3vw, 24px);
+  pointer-events: all;
+}
+
+.logo-small {
+  font-size: clamp(0.82rem, 2vw, 1rem);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--purple), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.fps-counter {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--cyan);
+  background: rgba(6,182,212,0.1);
+  border: 1px solid rgba(6,182,212,0.2);
+  border-radius: 20px;
+  padding: 4px clamp(8px, 1.5vw, 14px);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* Status bar — sits in the middle row, aligned to bottom of it */
+.ui-status {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: clamp(10px, 2vh, 20px);
+}
+
+.hand-status {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, 1.2vw, 12px);
+  background: rgba(10,6,20,0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: clamp(6px, 1vh, 10px) clamp(12px, 2.5vw, 20px);
+  font-size: var(--text-xs);
+  color: var(--muted);
+  transition: all 0.3s;
+}
+
+.hand-dot {
+  width: clamp(6px, 1.2vw, 8px);
+  height: clamp(6px, 1.2vw, 8px);
+  border-radius: 50%;
+  background: #333;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+.hand-dot.active { background: var(--green); box-shadow: 0 0 10px var(--green); }
+.hand-dot.active.left  { background: var(--purple); box-shadow: 0 0 10px var(--purple); }
+.hand-dot.active.right { background: var(--cyan);   box-shadow: 0 0 10px var(--cyan); }
+
+/* ——————————————————————————————————————
+   LOADING INDICATOR
+—————————————————————————————————————— */
+.loading {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: clamp(10px, 2vh, 18px);
+  background: rgba(6,4,15,0.88);
+  backdrop-filter: blur(8px);
+  z-index: 20;
+  color: var(--muted);
+  font-size: var(--text-sm);
+  text-align: center;
+  padding: var(--sp-md);
+  transition: opacity 0.4s;
+}
+.loading.done { opacity: 0; pointer-events: none; }
+
+.loading-spinner {
+  width: clamp(32px, 6vw, 44px);
+  height: clamp(32px, 6vw, 44px);
+  border: 3px solid rgba(168,85,247,0.2);
+  border-top-color: var(--purple);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ——————————————————————————————————————
+   SCROLLBAR
+—————————————————————————————————————— */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 4px; }
+
+/* ——————————————————————————————————————
+   BREAKPOINTS
+—————————————————————————————————————— */
+
+/* Small phones (≤ 380px) */
+@media (max-width: 380px) {
+  .splash-tips {
+    grid-template-columns: 1fr;
+  }
+  .splash-content {
+    border-radius: var(--radius);
+  }
+}
+
+/* Tablets (≥ 640px) — tips go 3 columns */
+@media (min-width: 640px) {
+  .splash-tips {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Large screens (≥ 1024px) */
+@media (min-width: 1024px) {
+  .splash-content {
+    padding: 52px 48px;
+  }
+}
+
+/* Landscape phones — compact vertical spacing */
+@media (max-height: 500px) and (orientation: landscape) {
+  .splash-content {
+    padding: 16px 24px;
+    gap: 8px;
+  }
+  .splash-icon { display: none; }
+  .splash-tips {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Touch devices — enlarge tap targets */
+@media (hover: none) and (pointer: coarse) {
+  .start-btn {
+    min-height: 52px;
+    padding: 14px 28px;
+  }
+  .hand-status {
+    padding: 10px 18px;
+  }
+}

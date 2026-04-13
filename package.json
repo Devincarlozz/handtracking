@@ -1,0 +1,10 @@
+{
+  "name": "hand-strings",
+  "version": "1.0.0",
+  "description": "Hand tracking interactive experience with strings and elastic bands",
+  "scripts": {
+    "dev": "npx serve . -p 3000 --cors",
+    "start": "npx serve . -p 3000 --cors"
+  },
+  "devDependencies": {}
+}

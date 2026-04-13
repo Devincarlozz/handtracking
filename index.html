@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vision Tracker — Real-time Hand & Face AR</title>
+  <meta name="description" content="Real-time hand and face tracking AR overlay." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div id="splash" class="splash">
+    <div class="splash-content">
+      <div class="splash-icon">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="40" r="38" stroke="url(#g1)" stroke-width="2"/>
+          <path d="M28 50 Q40 20 52 50" stroke="url(#g2)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M24 45 Q40 10 56 45" stroke="url(#g3)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#06b6d4"/>
+            </linearGradient>
+            <linearGradient id="g2" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#e879f9"/><stop offset="100%" stop-color="#38bdf8"/>
+            </linearGradient>
+            <linearGradient id="g3" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#34d399"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h1 class="splash-title">Vision Tracker</h1>
+      <p class="splash-subtitle">Real-time face & hand AR. Zero latency. Fully local.</p>
+      <ul class="splash-tips">
+        <li><span class="tip-icon">✦</span> Raise hands for <strong>neon skeleton</strong></li>
+        <li><span class="tip-icon">✦</span> Face maps <strong>468 landmarks</strong></li>
+        <li><span class="tip-icon">✦</span> Pinch for <strong>ripple fx</strong></li>
+      </ul>
+      <button id="start-btn" class="start-btn">
+        <span>Enable Camera</span>
+        <svg class="btn-arrow" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <p class="splash-note">Camera stays local — nothing is uploaded.</p>
+    </div>
+    <div class="splash-bg"><canvas id="splash-canvas"></canvas></div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="app hidden">
+    <!-- Hidden video: raw MediaPipe input only -->
+    <video id="webcam" autoplay playsinline muted></video>
+    <!-- Single canvas: draws video + landmarks in one pass = perfect sync -->
+    <canvas id="main-canvas"></canvas>
+
+    <!-- UI Overlay -->
+    <div class="ui-overlay">
+      <div class="ui-header">
+        <div class="logo-small">Vision Tracker</div>
+        <div id="fps-counter" class="fps-counter">-- fps</div>
+      </div>
+      <div class="ui-status">
+        <div id="hand-status" class="hand-status">
+          <div class="hand-dot left" id="left-dot"></div>
+          <span id="hand-text">Searching for hands…</span>
+          <div class="hand-dot right" id="right-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading">
+      <div class="loading-spinner"></div>
+      <p id="loading-text">Loading models…</p>
+    </div>
+  </div>
+
+  <!-- Reliable legacy MediaPipe CDN (guaranteed to work) -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="app.js"></script>
+</body>
+</html>
