@@ -433,7 +433,7 @@
           width:     { ideal: 1280 },
           height:    { ideal: 720 },
           frameRate: { ideal: 30, max: 60 },
-          facingMode: 'user',
+          facingMode: 'environment', // Use back camera to completely avoid all physical and native browser mirroring
         },
       });
     } catch (err) {
