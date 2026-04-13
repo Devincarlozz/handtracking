@@ -317,7 +317,12 @@
     const W = canvas.width;
     const H = canvas.height;
 
-    // 1. Draw raw native video frame directly onto canvas (unmirrored)
+    // Apply global mirror to fix the "opposite rotation" optical illusion
+    ctx.save();
+    ctx.translate(W, 0);
+    ctx.scale(-1, 1);
+
+    // 1. Draw raw native video frame
     ctx.drawImage(videoEl, 0, 0, W, H);
 
     // 2. Subtle dark overlay for neon contrast
@@ -329,6 +334,8 @@
     drawRipples();
     drawSticks(W, H); 
     drawHands(W, H);
+
+    ctx.restore();
 
     // 4. FPS counter
     fpsFrames++;
